@@ -73,7 +73,7 @@ public class Game {
         setUpDecks();
     }
 
-    public void start() {
+    public String start() {
         setUpDecks();
         distributeCards();
 //        while (winners.isEmpty()) {
@@ -86,6 +86,14 @@ public class Game {
 //        }
         messages.add("Game started successfully! Players have been dealt their cards.");
         playTurn();
+        resolveEvent(null);
+
+        return String.join("\n", messages);
+    }
+
+    public void play(){
+        playTurn();
+        resolveEvent(null);
     }
 
 
@@ -97,8 +105,10 @@ public class Game {
         // Initialize the event deck with 12 quest cards and 5 event cards
         eventDeck = new Deck("Event", 17);
         eventDeck.shuffle();
-//        List<Card> test = Arrays.asList(new Card("Queen’s Favor", 0 ));
-         List<Card> test = Arrays.asList(new Card("Q2", 2 ));
+         List<Card> test = Arrays.asList(
+                 new Card("Q2", 2 ),
+                 new Card("Plague", 0 ),
+                 new Card("Queen’s Favor", 0 ));
         eventDeck.addOnTop(test);
     }
 
@@ -112,15 +122,9 @@ public class Game {
     }
 
     // Display current player’s turn, hand and the drawn event card
-    public void playTurn() {
-        messages.clear();
-
+    public String playTurn() {
+        //messages.clear();
         try {
-//            if (isFirstTurn) {
-//                messages.add("Processing first turn logic...");
-//                isFirstTurn = false;
-//            }
-
             Player currentPlayer = players.get(initialPlayerIndex);
             messages.add("Player " + (players.indexOf(currentPlayer) + 1) + "'s turn");
 
@@ -136,6 +140,7 @@ public class Game {
         } catch (Exception e) {
             messages.add("Error during playTurn: " + e.getMessage());
         }
+        return String.join("\n", messages);
     }
 
     // Resolve the event or quest card drawn
@@ -152,19 +157,22 @@ public class Game {
                     return String.join("\n", messages);
                 }
             } else {
-                if (input == null) {
-                    messages.add(("---> A " + eventCard1.getType() + " event is drawn <---"));
-                    String eventMessages = eventCard1.applyEvent(players.get(initialPlayerIndex), players, adventureDeck);
-                    messages.add(eventMessages);
+                System.out.println("EEEE");
+                messages.add(("---> A " + eventCard1.getType() + " event is drawn <---"));
+                String eventMessages = eventCard1.applyEvent(players.get(initialPlayerIndex), players, adventureDeck);
+                messages.add(eventMessages);
 
-                    staticPlayersToTrim = trimHandForAll();
-                    trimmingIndex = 0;
-                    if (!staticPlayersToTrim.isEmpty()) {
-                        currentGameState = GameState.TRIMMING_HANDS;
-                        return prepareTrimmingMessage(staticPlayersToTrim.get(trimmingIndex));
-                    }
+                staticPlayersToTrim = trimHandForAll();
+                trimmingIndex = 0;
+                if (!staticPlayersToTrim.isEmpty()) {
+                    System.out.println(staticPlayersToTrim);
+                    currentGameState = GameState.TRIMMING_HANDS;
+                    messages.add(prepareTrimmingMessage(staticPlayersToTrim.get(trimmingIndex)));
+                    return String.join("\n", messages);
                 }
+
                 currentGameState = GameState.IDLE;
+                play();
                 return String.join("\n", messages);
             }
             discardEPile.add(eventCard1);
@@ -199,6 +207,7 @@ public class Game {
 //            }
             return promptParticipantsForQuestStage(input, currentStage);
         } else if (currentGameState == GameState.BUILDING_ATTACK_CARD) {
+
             System.out.println("PRINT");
             return buildAttackForParticipant(input);
         } else {
@@ -288,7 +297,6 @@ public class Game {
     // Trim the player's hand to 12 cards
     public String trimHandTo12(String input, Player player) {
         System.out.println("playerToTrim: " + (players.indexOf(playerToTrim) + 1));
-        System.out.println("input trim: " + input);
         messages.clear();
 
         if (input == null || input.trim().isEmpty()) {
@@ -297,11 +305,8 @@ public class Game {
 
         try {
             int cardToDiscard = Integer.parseInt(input);
-            System.out.println("cardToDiscard: " + cardToDiscard);
-
             if (cardToDiscard >= 1 && cardToDiscard <= player.getHandSize()) {
                 Card removedCard = player.getHand().remove(cardToDiscard - 1);
-                System.out.println("You have discarded: " + removedCard);
                 messages.add("You have discarded: " + removedCard);
                 discardChosenCards(Collections.singletonList(removedCard));
             } else {
@@ -315,22 +320,28 @@ public class Game {
         player.sortHand();
         messages.addAll(player.displayHand());
 
+//        System.out.println("curr Trim hand " + playerToTrim.getHandSize());
+//        System.out.println("curr player:  " + (players.indexOf(eligibleParticipants.get(currentParticipantIndex)) + 1));
+//        System.out.println("curr playerToTrim:  " + (players.indexOf(playerToTrim) + 1));
         if (playerToTrim.getHandSize() <=12) {
             messages.add("Your hand has been trimmed to 12 cards.");
-            System.out.println("Your hand has been trimmed to 12 cards.");
-            currentParticipantIndex = (currentParticipantIndex + 1);
-            currentGameState = GameState.PROMPTING_PARTICIPATE;
+            System.out.println("currentParticipantIndex before " + currentParticipantIndex);
+//            System.out.println("incr Trim " + currentParticipantIndex);
+//            System.out.println("ell size " + (eligibleParticipants.size()-1));
 
-            if (currentParticipantIndex == eligibleParticipants.size()) {
-                System.out.println("HERRE " + messages);
+            if (currentParticipantIndex == (eligibleParticipants.size()-1)) {
                 messages.add("MOVE TO BUILD ATTACKS");
                 currentGameState = GameState.BUILDING_ATTACK_CARD;
-                promptCount = 0;
-
-                 resolveEvent(null);
+                System.out.println("HERRE " + currentGameState);
+                currentParticipantIndex = 0;
                  return String.join("\n", messages);
+            }else {
+
+                currentGameState = GameState.PROMPTING_PARTICIPATE;
+                ++currentParticipantIndex;
+                messages.add("Player " + (players.indexOf(eligibleParticipants.get(currentParticipantIndex)) + 1) + ", would you like to continue or withdraw from the quest? (c/w) TRIM");
+                System.out.println("currentParticipantIndex after" + currentParticipantIndex);
             }
-            return resolveEvent(null);
         }
         return String.join("\n", messages);
     }
@@ -356,6 +367,12 @@ public class Game {
                 }
             } else if (input.equalsIgnoreCase("no")) {
                 messages.add("Player " + (playerToAnswerIndex + 1) + " has decided to decline the quest.");
+                if (playerToAnswerIndex == (players.size() -1)) {
+                    messages.add("No players agreed to sponsor the quest.");
+                    handleNoSponsorship(input);
+                    return String.join("\n", messages);
+                }
+                messages.add("Player " + (playerToAnswerIndex + 2) + ", would you like to sponsor this quest? (yes/no)");
             } else {
                 messages.add("Invalid input. Please input yes/no.");
                 return String.join("\n", messages);
@@ -366,17 +383,17 @@ public class Game {
         playerToAnswerIndex = (playerToAnswerIndex + 1) % players.size();
 
         // Check if all players have been asked
-        if (playerToAnswerIndex == initialPlayerIndex) {
-            messages.add("No players agreed to sponsor the quest.");
-            handleNoSponsorship(input);
-            currentGameState = GameState.IDLE; // No sponsorship, return to idle state
-        }
+//        if (playerToAnswerIndex == initialPlayerIndex) {
+//            messages.add("No players agreed to sponsor the quest.");
+//            handleNoSponsorship(input);
+//        }
         return String.join("\n", messages);
     }
 
-    public void handleNoSponsorship(String input) {
+    public String handleNoSponsorship(String input) {
         messages.add("No one agreed to sponsor the quest. The quest has failed.");
         endCurrentPlayerTurn(input);
+        return String.join("\n", messages);
     }
 
     // End the current player's turn and move to the next player
@@ -385,6 +402,8 @@ public class Game {
         messages.add("Press enter to end your turn.");
 
         initialPlayerIndex = (initialPlayerIndex + 1) % players.size();
+        //currentGameState = GameState.IDLE;
+        play();
         return String.join("\n", messages);
     }
 
@@ -414,10 +433,8 @@ public class Game {
         messages.clear();
         // Check if there are no participants left
         if (eligibleParticipants.isEmpty()) {
-            messages.add("MOVE TO BUILD ATTACKS");
+            messages.add("MOVE TO BUILD ATTACKS 2222");
             currentGameState = GameState.BUILDING_ATTACK_CARD;
-            promptCount = 0;
-            //updatedEligibleList = eligibleParticipants;
             return resolveEvent(null);
         }
 
@@ -426,11 +443,11 @@ public class Game {
         // Get the current participant
         playerToTrim = eligibleParticipants.get(currentParticipantIndex);
 
-        if (input == null) {
-            messages.add("Player " + (players.indexOf(playerToTrim) + 1) +
-                    ", would you like to continue or withdraw from the quest? (c/w)");
-            return String.join("\n", messages);
-        }
+//        if (input == null) {
+//            messages.add("Player " + (players.indexOf(playerToTrim) + 1) +
+//                    ", would you like to continue or withdraw from the quest? (c/w)");
+//            return String.join("\n", messages);
+//        }
 
         // Validate input
         if (!input.equalsIgnoreCase("c") && !input.equalsIgnoreCase("w")) {
@@ -441,14 +458,25 @@ public class Game {
         // displayEligibleParticipants(eligibleParticipants);
         // Process decision
         if (input.equalsIgnoreCase("w")) {
-            promptCount++;
             messages.add("Player " + (players.indexOf(playerToTrim) + 1) + " has withdrawn from the quest.");
             withdrawnParticipants.add(playerToTrim);
+
+            System.out.println("trim index" + eligibleParticipants.indexOf(playerToTrim));
+            System.out.println("trim size" + (eligibleParticipants.size() - 2));
+            System.out.println("curr parr index" + currentParticipantIndex);
             eligibleParticipants.remove(playerToTrim);
-            System.out.println("PLAYER W " + eligibleParticipants);
-            return resolveEvent(null);
+
+            messages.add("Player " + (players.indexOf(playerToTrim) + 2) + ", would you like to continue or withdraw from the quest? (c/w)");
+//            if(currentParticipantIndex < (eligibleParticipants.size() - 1)){
+//            } else {
+//                System.out.println("DFDF");
+//                currentGameState = GameState.BUILDING_ATTACK_CARD;
+//                return String.join("\n", messages);
+//            }
+//            currentParticipantIndex++;
+
+            return String.join("\n", messages);
         } else {
-            promptCount++;
             messages.add("Player " + (players.indexOf(playerToTrim) + 1) + " is tackling the current stage.");
             Card drawnCard = adventureDeck.drawCard();
             playerToTrim.addCardToHand(drawnCard);
@@ -457,9 +485,12 @@ public class Game {
 
             if (playerToTrim.getHandSize() > 12) {
                 currentGameState = GameState.TRIMMING_ONE_HAND;
+
                 System.out.println(currentGameState);
-                return resolveEvent(null);
+//                 return resolveEvent(null);
+                return String.join("\n", messages);
             }
+            messages.add("Player " + (players.indexOf(playerToTrim) + 1) + ", would you like to continue or withdraw from the quest? (c/w) aff");
 
 //            currentParticipantIndex = (currentParticipantIndex + 1);
 //            if (currentParticipantIndex == eligibleParticipants.size()) {
@@ -474,74 +505,76 @@ public class Game {
             //eligibleParticipants.remove(playerToTrim);
             //updatedEligibleList.add(playerToTrim);
         }
-            currentGameState = GameState.PROMPTING_PARTICIPATE;
-             return resolveEvent(null);
+        currentGameState = GameState.PROMPTING_PARTICIPATE;
+        return resolveEvent(null);
     }
 
     private String buildAttackForParticipant(String input) {
         messages.clear();
         System.out.println("input build attack: " + input);
         int attackValue = 0;
-        List<Card> stageCards = totalStagesCards.get(currentStage - 1);
-        int stageValue = calculateStageValue(stageCards);
+//        List<Card> stageCards = totalStagesCards.get(currentStage - 1);
+//        int stageValue = calculateStageValue(stageCards);
 //        if (weaponCards.isEmpty()) {
 //            messages.add("You have no weapon cards available. Attack value will be 0.");
 //            return String.join("\n", messages);
 //        }
 
-        if(input == null){
-//            System.out.println("hreihfeiorheo");
-            messages.add("Resolving attacks for Stage " + (currentStage) + " (Stage value: " + stageValue + "):");
-            messages.add("Player " + (players.indexOf(playerToTrim) + 1) + ", please build your attack.");
-            displayWeaponCards(weaponCards);
-            return String.join("\n", messages);
-        }
+
+//        if (input
+//        messages.add("Resolving attacks for Stage " + (currentStage) + " (Stage value: " + stageValue + "):");
+        messages.add("Player " + (eligibleParticipants.indexOf(playerToTrim) + 1) + ", please build your attack.");
+//        displayWeaponCards(weaponCards);
+//            return String.join("\n", messages);
 
 
-        try {
-            int cardPosition = Integer.parseInt(input);
 
-            if (cardPosition < 1 || cardPosition > weaponCards.size()) {
-                messages.add("Invalid position. Please choose a valid card number (1 to " + weaponCards.size() + ").");
-            } else {
-                Card selectedCard = weaponCards.get(cardPosition - 1);
-
-                // Check if the card was already chosen
-                boolean alreadyChosen = false;
-                for (Card chosenCard : chosenCards) {
-                    if (chosenCard.getType().equals(selectedCard.getType())) {
-                        alreadyChosen = true;
-                        break;
-                    }
-                }
-
-                if (alreadyChosen) {
-                    messages.add("You have already selected this card. Please choose a different card.");
-                } else {
-                    playerToTrim.addToAttack(selectedCard);
-                    chosenCards.add(selectedCard);
-                    weaponCards.remove(cardPosition - 1);
-                    messages.add("You have selected " + selectedCard + " for your attack.");
-                    displayWeaponCards(weaponCards);
-                }
-            }
-        } catch (NumberFormatException e) {
-            // If the input is not a valid number, prompt the player again
-            messages.add("Invalid input. Please enter a valid number (1 to " + weaponCards.size() + ") or type 'Quit'.");
-        }
-
-        if (input.equalsIgnoreCase("quit")) {
-            messages.add("You have chosen to quit the attack phase.");
-            messages.add("Your final attack includes the following cards:");
-            for (Card card : chosenCards) {
-                messages.add("- " + card);
-            }
-            messages.add("Your final attack value is: " + playerToTrim.getAttackValue());
-            discardUsedAttackCards(playerToTrim);
-            resolveStage(playerToTrim.getAttackValue(), stageValue, currentStage, stageCount);
-            chosenCards.clear();
-        }
+        System.out.println("input: " + input);
         return String.join("\n", messages);
+//        try {
+//            int cardPosition = Integer.parseInt(input);
+//
+//            if (cardPosition < 1 || cardPosition > weaponCards.size()) {
+//                messages.add("Invalid position. Please choose a valid card number (1 to " + weaponCards.size() + ").");
+//            } else {
+//                Card selectedCard = weaponCards.get(cardPosition - 1);
+//
+//                // Check if the card was already chosen
+//                boolean alreadyChosen = false;
+//                for (Card chosenCard : chosenCards) {
+//                    if (chosenCard.getType().equals(selectedCard.getType())) {
+//                        alreadyChosen = true;
+//                        break;
+//                    }
+//                }
+//
+//                if (alreadyChosen) {
+//                    messages.add("You have already selected this card. Please choose a different card.");
+//                } else {
+//                    playerToTrim.addToAttack(selectedCard);
+//                    chosenCards.add(selectedCard);
+//                    weaponCards.remove(cardPosition - 1);
+//                    messages.add("You have selected " + selectedCard + " for your attack.");
+//                    displayWeaponCards(weaponCards);
+//                }
+//            }
+//        } catch (NumberFormatException e) {
+//            // If the input is not a valid number, prompt the player again
+//            messages.add("Invalid input. Please enter a valid number (1 to " + weaponCards.size() + ") or type 'Quit'.");
+//        }
+//
+//        if (input.equalsIgnoreCase("quit")) {
+//            messages.add("You have chosen to quit the attack phase.");
+//            messages.add("Your final attack includes the following cards:");
+//            for (Card card : chosenCards) {
+//                messages.add("- " + card);
+//            }
+//            messages.add("Your final attack value is: " + playerToTrim.getAttackValue());
+//            discardUsedAttackCards(playerToTrim);
+//            //resolveStage(playerToTrim.getAttackValue(), stageValue, currentStage, stageCount);
+//            chosenCards.clear();
+//        }
+//        return String.join("\n", messages);
     }
 
     public void resolveStage( int attackValue, int stageValue, int stageNumber, int totalStages) {
@@ -606,8 +639,6 @@ public class Game {
         eligibleParticipants.remove(sponsor); // Sponsor doesn't participate
         withdrawnParticipants.add(sponsor);
 
-        originalEligibleParticipantsSize = eligibleParticipants;
-
         System.out.println("Current stage: " + currentStage);
         System.out.println("Current stage sponsor cards: " + stageCards);
 
@@ -628,9 +659,9 @@ public class Game {
         if (input == null) {
             currentGameState = GameState.PROMPTING_PARTICIPATE;
             displayEligibleParticipants(eligibleParticipants);
-            Player currentPlayer = eligibleParticipants.get(currentParticipantIndex);
-            messages.add("Player " + (players.indexOf(currentPlayer) + 1) +
-                    ", would you like to continue or withdraw from the quest? (c/w)");
+            playerToTrim = eligibleParticipants.get(currentParticipantIndex);
+            messages.add("Player " + (players.indexOf(playerToTrim) + 1) +
+                    ", would you like to continue or withdraw from the quest? (c/w) STARTQ");
 //            hasFinishedPromptParticipation = true;
             return String.join("\n", messages);
         }
@@ -769,7 +800,7 @@ public class Game {
         } else {
             messages.add("No players have won yet. Moving to the next player's turn.");
             endCurrentPlayerTurn(input);
-            playTurn();
+            play();
         }
         return String.join("\n", messages);
     }

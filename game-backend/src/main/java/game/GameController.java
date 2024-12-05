@@ -23,8 +23,7 @@ public class GameController {
     // Start the game and initialize decks and players
     @GetMapping("/start")
     public String startGame() {
-        game.start(); // This returns the game's start message
-        return game.getMessages();
+        return game.start(); // This returns the game's start message
     }
 
 

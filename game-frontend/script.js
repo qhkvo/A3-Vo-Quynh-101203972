@@ -28,10 +28,11 @@ function updateDisplayScreen(message) {
 async function startGame() {
     try {
         const result = await apiRequest('/start');
+//        const resultText = await result.text();
 //        console.log("Start Game Response:", result);
-//        updateDisplayScreen(result);
+        updateDisplayScreen(result);
 
-        await resolveEvent();
+//        await resolveEvent();
     } catch (error) {
         console.error("Error in startGame:", error);
         updateDisplayScreen("Error starting the game. Please try again.");
@@ -69,6 +70,7 @@ async function resolveEvent() {
 
 async function resolveEventInput() {
     const inputValue = document.getElementById("input").value.trim();
+    console.log("Received input: ", inputValue);
     if (!inputValue) {
         updateDisplayScreen("Please enter a valid input.");
         return;
