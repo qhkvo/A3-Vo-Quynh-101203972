@@ -52,13 +52,12 @@ public class Player {
     }
 
 
-    public String displayUpdatedHand() {
+    public List<String> displayUpdatedHand() {
         List<String> cards = new ArrayList<>();
         for (Card card : hand) {
             cards.add(card.toString());
         }
-        messages.add("Your current hand: " + cards);
-        return String.join("\n", messages);
+        return cards;
     }
 
     // Sort cards in the player's hand (F -> W (S before H))
@@ -102,16 +101,12 @@ public class Player {
         System.out.println("STAGE CARDS" + stageCards);
 
         if (input == null) {
-            messages.add("---> SETTING UP STAGE " + currentStage + " OF " + stageCount + " <---jnj");
+            messages.add("---> SETTING UP STAGE " + currentStage + " OF " + stageCount + " <---");
             sortHand();
             messages.addAll(displayHand());
             messages.add("Enter the position of a card to include in this stage, or type 'Quit' to finish the stage:");
             return String.join("\n", messages);
         }
-
-        System.out.println("input--> " + input);
-
-
 
         if (input.equalsIgnoreCase("Quit")) {
             if (stageCards.isEmpty()) {
@@ -139,13 +134,11 @@ public class Player {
                         questSetupComplete = true;
                         previousStageValue = 0;
                         return String.join("\n", messages);
-                        //return setUpQuest(null, stages, stageCount, gameStage); // Pass null to trigger final check
                     } else {
-                        messages.add("---> SETTING UP STAGE " + currentStage + " OF " + stageCount + " <---uiui");
+                        messages.add("---> SETTING UP STAGE " + currentStage + " OF " + stageCount + " <---");
                         sortHand();
                         messages.addAll(displayHand());
                         messages.add("Enter the position of a card to include in this stage, or type 'Quit' to finish the stage:");
-                        //return String.join("\n", messages);
                     }
                 }
             }
@@ -178,8 +171,6 @@ public class Player {
         previousStageValue = 0;
         return String.join("\n", messages);
     }
-
-
 
     // Calculate the total value of a stage (Foe + Weapon values)
     private int calculateStageValue(List<Card> stageCards) {

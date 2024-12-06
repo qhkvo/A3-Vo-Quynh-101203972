@@ -263,6 +263,102 @@ public class Game {
         return String.join("\n", messages);
     }
 
+    public String trigger1WinnerScenario() {
+        setUpDecks();
+        List<Card> drawnACards = Arrays.asList(
+                new Card("F5",5), new Card("F10", 10),
+                new Card("F20", 20), new Card("F15", 15),
+                new Card("F5", 5), new Card("F25", 25),
+                new Card("F5", 5), new Card("F10", 10),
+                new Card("F20", 20), new Card("F5",5),
+                new Card("F10", 10), new Card("F20", 20),
+                new Card("F25", 25), new Card("F25", 25),
+                new Card("H10", 10), new Card("S10", 10),
+                new Card("B15", 15), new Card("F40", 40),
+                new Card("D5", 5), new Card("D5", 5),
+                new Card("F30", 30), new Card("F25", 25),
+                new Card("B15", 15), new Card("H10", 10),
+                new Card("F50", 50), new Card("S10", 10),
+                new Card("S10", 10), new Card("F40", 40),
+                new Card("F50", 50), new Card("H10", 10),
+                new Card("H10", 10), new Card("H10", 10),
+                new Card("S10", 10), new Card("S10", 10),
+                new Card("S10", 10), new Card("S10", 10),
+                new Card("F35", 35)
+        );
+
+        List<Card> drawnECards = List.of(new Card("Q4", 4), new Card("Plague", 0), new Card("Prosperity", 0), new Card("Queen's favor", 0));
+
+        getAdventureDeck().addOnTop(drawnACards);
+        getEventDeck().addOnTop(drawnECards);
+
+        List<Player> players = getPlayers();
+        p1 = players.get(0);
+        p2 = players.get(1);
+        p3 = players.get(2);
+        p4 = players.get(3);
+
+        p1.removeHand();
+        p2.removeHand();
+        p3.removeHand();
+        p4.removeHand();
+
+        p1.addCardToHand( new Card("F5", 5));
+        p1.addCardToHand( new Card("F5", 5));
+        p1.addCardToHand( new Card("F10",10));
+        p1.addCardToHand( new Card("F10",10));
+        p1.addCardToHand( new Card("F15", 15));
+        p1.addCardToHand( new Card("F15", 15));
+        p1.addCardToHand( new Card("F20", 20));
+        p1.addCardToHand( new Card("F20", 20));
+        p1.addCardToHand( new Card("D5", 5));
+        p1.addCardToHand( new Card("D5", 5));
+        p1.addCardToHand( new Card("D5", 5));
+        p1.addCardToHand( new Card("D5", 5));
+
+        p2.addCardToHand(new Card("F25", 25));
+        p2.addCardToHand(new Card("F30", 30));
+        p2.addCardToHand(new Card("S10", 10));
+        p2.addCardToHand(new Card("S10", 10));
+        p2.addCardToHand(new Card("S10", 10));
+        p2.addCardToHand(new Card("H10", 10));
+        p2.addCardToHand(new Card("H10", 10));
+        p2.addCardToHand(new Card("B15", 15));
+        p2.addCardToHand(new Card("B15", 15));
+        p2.addCardToHand(new Card("L20",20));
+        p2.addCardToHand(new Card("L20", 20));
+        p2.addCardToHand(new Card("E30",30));
+
+        p3.addCardToHand(new Card("F25", 25));
+        p3.addCardToHand(new Card("F30", 30));
+        p3.addCardToHand(new Card("S10", 10));
+        p3.addCardToHand(new Card("S10", 10));
+        p3.addCardToHand(new Card("S10", 10));
+        p3.addCardToHand(new Card("H10", 10));
+        p3.addCardToHand(new Card("H10", 10));
+        p3.addCardToHand(new Card("B15", 15));
+        p3.addCardToHand(new Card("B15", 15));
+        p3.addCardToHand(new Card("L20", 20));
+        p3.addCardToHand(new Card("L20", 20));
+        p3.addCardToHand(new Card("E30",30));
+
+        p4.addCardToHand(new Card("F25",25));
+        p4.addCardToHand(new Card("F30", 30));
+        p4.addCardToHand(new Card("F70", 70));
+        p4.addCardToHand(new Card("S10", 10));
+        p4.addCardToHand(new Card("S10", 10));
+        p4.addCardToHand(new Card("S10", 10));
+        p4.addCardToHand(new Card("H10", 10));
+        p4.addCardToHand(new Card("H10", 10));
+        p4.addCardToHand(new Card("B15", 15));
+        p4.addCardToHand(new Card("B15", 15));
+        p4.addCardToHand(new Card("L20", 20));
+        p4.addCardToHand(new Card("L20",20));
+
+        play();
+        return String.join("\n", messages);
+    }
+
     public String trigger0WinnersScenario() {
         setUpDecks();
         List<Card> drawnACards = Arrays.asList(
@@ -350,19 +446,10 @@ public class Game {
         return String.join("\n", messages);
     }
 
-//
     public void play(){
         playTurn();
         resolveEvent(null);
     }
-
-//    public String play() {
-//        String turnMessages = playTurn();  // Get the messages from playTurn
-//        String eventMessages = resolveEvent(null);  // Get the messages from resolveEvent
-//
-//        return turnMessages + "\n" + eventMessages;  // Combine the messages and return
-//    }
-
 
     // Set up adventure and event decks
     public void setUpDecks() {
@@ -391,18 +478,17 @@ public class Game {
 
     // Display current player’s turn, hand and the drawn event card
     public String playTurn() {
-        //messages.clear();
         try {
             Player currentPlayer = players.get(initialPlayerIndex);
             messages.add("Player " + (players.indexOf(currentPlayer) + 1) + "'s turn");
 
+
             currentPlayer.sortHand();
             messages.addAll(currentPlayer.displayHand());
-//
+
             Card eventCard = eventDeck.drawCard();
             eventCard1 = new EventCard(eventCard.getType(), eventCard.getValue());
             messages.add("Event card drawn: " + eventCard);
-//            System.out.println("Event card drawn: " + eventCard);
             currentGameState = GameState.IDLE;
 
         } catch (Exception e) {
@@ -586,8 +672,9 @@ public class Game {
         }
 
         player.sortHand();
-        messages.addAll(player.displayHand());
         messages.add("Finish trimming.");
+        messages.add("Player " + (players.indexOf(sponsor) + 1) + "'s hand: " + sponsor.displayUpdatedHand());
+        messages.add("Player " + (players.indexOf(sponsor) + 1) + "'s hand size: " + sponsor.getHandSize());
         endCurrentPlayerTurn();
         totalStagesCards.clear();
         System.out.println("TOTAL STAGES CARD__END QUEST__ " + totalStagesCards);
@@ -664,14 +751,17 @@ public class Game {
             if (currentParticipantIndex == (eligibleParticipants.size()-1)) {
                 messages.add("MOVE TO BUILD ATTACKS. Press 'c' to continue");
                 currentGameState = GameState.BUILDING_ATTACK_CARD;
-//                System.out.println("HERRE " + currentGameState);
+                messages.add("Participants remaining for the next stage:");
+                for (Player eliPlayer : eligibleParticipants) {
+                    messages.add("Player " + (players.indexOf(eliPlayer) + 1));
+                }
                 currentParticipantIndex = 0;
                 return String.join("\n", messages);
             } else {
 
                 currentGameState = GameState.PROMPTING_PARTICIPATE;
                 ++currentParticipantIndex;
-                messages.add("Player " + (players.indexOf(eligibleParticipants.get(currentParticipantIndex)) + 1) + ", would you like to continue or withdraw from the quest? (c/w) TRIM");
+                messages.add("Player " + (players.indexOf(eligibleParticipants.get(currentParticipantIndex)) + 1) + ", would you like to continue or withdraw from the quest? (c/w)");
 //                System.out.println("currentParticipantIndex after" + currentParticipantIndex);
             }
         }
@@ -735,33 +825,16 @@ public class Game {
     // End the current player's turn and move to the next player
     public String endCurrentPlayerTurn() {
         messages.add("Player " + (initialPlayerIndex + 1) + "'s turn is over.");
-//        messages.add("Press enter to end your turn.");
 
         initialPlayerIndex = (initialPlayerIndex + 1) % players.size();
         currentGameState = GameState.IDLE;
+
+//        displayHandsEndQuest(players);
+        displayParticipantsShields(players);
+        eligibleParticipants.clear();
+        currentPlayerIndex = 0;
+        checkForWinnersOrProceed();
         play();
-        return String.join("\n", messages);
-    }
-
-    // Handles when a player continues the quest
-    public String handlePlayerContinuesQuest(Player player, Deck adventureDeck) {
-        // Step 1: Draw an adventure card
-        Card drawnCard = adventureDeck.drawCard();
-        player.addCardToHand(drawnCard);
-        messages.add("Player " + (players.indexOf(player) + 1) + " drew: " + drawnCard);
-        player.sortHand();
-
-        if (player.getHandSize() > 12) {
-            currentGameState = GameState.TRIMMING_ONE_HAND;
-            System.out.println(currentGameState);
-            return String.join("\n", messages);
-        }
-        messages.add("Your hand has been trimmed to 12 cards.");
-        //currentParticipantIndex = (currentParticipantIndex + 1) % eligibleParticipants.size();
-        currentGameState = GameState.PROMPTING_PARTICIPATE;
-        //return resolveEvent(null);  // This triggers the attack phase for the first player
-
-        //messages.add("Player " + (players.indexOf(player) + 1) + " is setting up their attack.");
         return String.join("\n", messages);
     }
 
@@ -769,20 +842,16 @@ public class Game {
         messages.clear();
         // Check if there are no participants left
 //        if (eligibleParticipants.isEmpty()) {
-//            messages.add("MOVE TO BUILD ATTACKS 2222");
-//            currentGameState = GameState.BUILDING_ATTACK_CARD;
+//            messages.add("MOVE TO BUILD ATTACKS //
+//            currentGameState = GameState.;
 //            return resolveEvent(null);
 //        }
 
-
         // Get the current participant
         playerToTrim = eligibleParticipants.get(currentParticipantIndex);
-
-//        if (input == null) {
-//            messages.add("Player " + (players.indexOf(playerToTrim) + 1) +
-//                    ", would you like to continue or withdraw from the quest? (c/w)");
-//            return String.join("\n", messages);
-//        }
+        if (!updatedEligibleList.contains(playerToTrim)) {
+            updatedEligibleList.add(playerToTrim);
+        }
 
         // Validate input
         if (!input.equalsIgnoreCase("c") && !input.equalsIgnoreCase("w")) {
@@ -794,18 +863,16 @@ public class Game {
         if (input.equalsIgnoreCase("w")) {
             messages.add("Player " + (players.indexOf(playerToTrim) + 1) + " has withdrawn from the quest.");
             withdrawnParticipants.add(playerToTrim);
+            messages.add("Player " + (players.indexOf(playerToTrim) + 1) + "'s hand: " + playerToTrim.displayUpdatedHand());
 
-            System.out.println("trim index" + eligibleParticipants.indexOf(playerToTrim));
-            System.out.println("trim size" + (eligibleParticipants.size() - 2));
-            System.out.println("curr parr index" + currentParticipantIndex);
-            eligibleParticipants.remove(playerToTrim);
+            updatedEligibleList.remove(playerToTrim);
             messages.add("Player " + (players.indexOf(playerToTrim) + 2) + ", would you like to continue or withdraw from the quest? (c/w)");
-            return String.join("\n", messages);
         } else {
             messages.add("Player " + (players.indexOf(playerToTrim) + 1) + " is tackling the current stage.");
             Card drawnCard = adventureDeck.drawCard();
             playerToTrim.addCardToHand(drawnCard);
             messages.add("Player " + (players.indexOf(playerToTrim) + 1) + " drew: " + drawnCard);
+
             playerToTrim.sortHand();
 
             if (playerToTrim.getHandSize() > 12) {
@@ -814,29 +881,29 @@ public class Game {
                 System.out.println(currentGameState);
                 return String.join("\n", messages);
             }
+        }
 
-
-//            System.out.println("CURR  INDEX: " + currentParticipantIndex );
             if (currentParticipantIndex == (eligibleParticipants.size()-1)) {
                 messages.add("MOVE TO BUILD ATTACKS FROM PROMPT. Press 'c' to continue");
+
                 currentGameState = GameState.BUILDING_ATTACK_CARD;
                 currentParticipantIndex = 0;
+                eligibleParticipants.clear();
+                eligibleParticipants.addAll(updatedEligibleList);
                 return String.join("\n", messages);
             }
             currentGameState = GameState.PROMPTING_PARTICIPATE;
             ++currentParticipantIndex;
-            messages.add("Player " + (players.indexOf(eligibleParticipants.get(currentParticipantIndex)) + 1) + ", would you like to continue or withdraw from the quest? (c/w) aff");
+            messages.add("Player " + (players.indexOf(eligibleParticipants.get(currentParticipantIndex)) + 1) + ", would you like to continue or withdraw from the quest? (c/w)");
 
             return String.join("\n", messages);
-
-        }
-//        currentGameState = GameState.PROMPTING_PARTICIPATE;
-//        return resolveEvent(null);
     }
 
     private String buildAttackForParticipant(String input) {
         messages.clear();
         playerBuildingAttack = eligibleParticipants.get(currentPlayerIndex);
+
+        messages.add("UPDATE_ELI: " + eligibleParticipants );
 
         List<Card> stageCards = totalStagesCards.get(currentStage - 1);
         weaponCards = filterWeaponCards(playerBuildingAttack.getHand());
@@ -964,13 +1031,16 @@ public class Game {
         if (attackValue < stageValue) {
             messages.add("Player " + (players.indexOf(playerBuildingAttack) + 1) + " is eliminated with an attack value of " + attackValue);
             messages.add("Player " + (players.indexOf(playerBuildingAttack) + 1) + " earns 0 shields.");
-            playerBuildingAttack.displayUpdatedHand();
+            messages.add("Player " + (players.indexOf(playerBuildingAttack) + 1) + "'s hand: " + playerBuildingAttack.displayUpdatedHand());
+            messages.add("");
             withdrawnParticipants.add(playerBuildingAttack);
             playerBuildingAttack.displayUpdatedHand();
             successfulParticipants.remove(playerBuildingAttack);
+            updatedEligibleList.remove(playerBuildingAttack);
         } else {
             messages.add("Player " + (players.indexOf(playerBuildingAttack) + 1) + " succeeds with an attack value of " + attackValue);
-            messages.add(playerBuildingAttack.displayUpdatedHand());
+            messages.add("Player " + (players.indexOf(playerBuildingAttack) + 1) + " 's hand size: " + playerBuildingAttack.getHandSize());
+            messages.add("");
 
             if (currentStage == stageCount) {
                 playerBuildingAttack.addShields(stageCount);
@@ -978,6 +1048,7 @@ public class Game {
                 successfulParticipants.clear();
                 messages.add("Player " + (players.indexOf(playerBuildingAttack) + 1) + " wins the quest.");
                 messages.add("Player " + (players.indexOf(playerBuildingAttack) + 1) + " earns " + stageCount + " shields.");
+                messages.add("Player " + (players.indexOf(playerBuildingAttack) + 1) + "'s hand: " + playerBuildingAttack.displayUpdatedHand());
             } else {
                 if (!successfulParticipants.contains(playerBuildingAttack)) {
                     successfulParticipants.add(playerBuildingAttack);
@@ -985,7 +1056,7 @@ public class Game {
             }
         }
 
-        System.out.println("Participants remaining for the next stage:: " + eligibleParticipants);
+//        System.out.println("Participants remaining for the next stage:: " + eligibleParticipants);
     }
 
 
@@ -1027,7 +1098,6 @@ public class Game {
             messages.add("Quest begins! There are " + sponsorBuiltStages.size() + " stages.");
         }
 
-            // Handle participant decisions for the current stage
         if (input == null) {
             currentGameState = GameState.PROMPTING_PARTICIPATE;
             displayEligibleParticipants(eligibleParticipants);
@@ -1054,6 +1124,24 @@ public class Game {
             }
         }
     }
+
+    public void displayParticipantsShields(List<Player> players) {
+        messages.add("Players' total shields:");
+        for (Player player : players) {
+            int playerNumber = players.indexOf(player) + 1;
+            messages.add("Player " + playerNumber + ": " + player.getTotalShield() + " shields");
+        }
+
+    }
+
+    public void displayHandsEndQuest(List<Player> players) {
+        messages.add("Players' total hand after quest:");
+        for (Player player : players) {
+            int playerNumber = players.indexOf(player) + 1;
+            messages.add("Player " + (playerNumber + 1) + "'s hand: " + players.get(playerNumber).displayUpdatedHand());
+        }
+    }
+
 
     public String endQuest(List<List<Card>> stages, Deck adventureDeck) {
         messages.add("---> THE QUEST HAS ENDED <---");
@@ -1095,8 +1183,11 @@ public class Game {
         }
         endCurrentPlayerTurn();
         withdrawnParticipants.clear();
+//        eligibleParticipants.clear();
         totalStagesCards.clear();
-        System.out.println("TOTAL STAGES CARD__END QUEST__ " + totalStagesCards);
+        messages.add("T__END QUEST__  Participants: " + eligibleParticipants);
+        displayHandsEndQuest(players);
+        displayParticipantsShields(players);
         currentGameState = GameState.IDLE;
 
         return String.join("\n", messages);
@@ -1134,7 +1225,7 @@ public class Game {
         discardAPile.addAll(chosenCards);
     }
 
-    public String checkForWinnersOrProceed(String input) {
+    public void checkForWinnersOrProceed() {
         for (Player player : players) {
             if (player.getTotalShield() >= 7) {
                 winners.add(player);
@@ -1153,10 +1244,9 @@ public class Game {
             }
         } else {
             messages.add("No players have won yet. Moving to the next player's turn.");
-            endCurrentPlayerTurn();
-            play();
+
+//            play();
         }
-        return String.join("\n", messages);
     }
 
     //Getters

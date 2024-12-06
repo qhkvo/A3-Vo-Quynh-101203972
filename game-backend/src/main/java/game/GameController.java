@@ -26,16 +26,6 @@ public class GameController {
         return game.start(); // This returns the game's start message
     }
 
-    @GetMapping("/checkForWinnersOrProceed")
-    public ResponseEntity<String> checkForWinnersOrProceed(@RequestParam(required = false) String input) {
-        try {
-            String response = game.checkForWinnersOrProceed(input);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error checking for winners: " + e.getMessage());
-        }
-    }
-
     @GetMapping("/A1_scenario")
     public String triggerA1Scenario() {
         try {
@@ -51,6 +41,15 @@ public class GameController {
             return game.trigger2WinnersScenario();
         } catch (Exception e) {
             return "Error triggering 2 Winners Scenario: " + e.getMessage();
+        }
+    }
+
+    @GetMapping("/Winner_1")
+    public String trigger1WinnerScenario() {
+        try {
+            return game.trigger1WinnerScenario();
+        } catch (Exception e) {
+            return "Error triggering 1 Winners Scenario: " + e.getMessage();
         }
     }
 

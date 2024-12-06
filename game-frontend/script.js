@@ -22,8 +22,20 @@ function updateDisplayScreen(message) {
     lines.forEach(line => {
         displayScreen.innerHTML += `<div>${line}</div>`;
     });
+
     displayScreen.scrollTop = displayScreen.scrollHeight; // Auto-scroll to the latest message
 }
+
+//function updateDisplayScreen(message) {
+//    const displayScreen = document.getElementById("display-screen");
+//    // Split the message into lines and append each line separately
+//    const lines = message.split('\n'));
+//    lines.forEach(line => {
+//        displayScreen.innerHTML += `<div>${line}</div>`;
+//    });
+//
+//    displayScreen.scrollTop = displayScreen.scrollHeight; // Auto-scroll to the latest message
+//}
 
 async function startGame() {
     try {
@@ -124,6 +136,7 @@ async function Winner_2() {
     }
 }
 
+
 async function Winner_1() {
     try {
         const result = await apiRequest('/Winner_1');
@@ -148,6 +161,6 @@ async function Winner_0() {
 
 document.getElementById("start-game-btn").addEventListener("click", startGame);
 document.getElementById("A1_scenario").addEventListener("click", A1_scenario);
-document.getElementById("2Winner").addEventListener("click", Winner_2);
-document.getElementById("1Winner").addEventListener("click", Winner_1);
-document.getElementById("0Winner").addEventListener("click", Winner_0);
+document.getElementById("Winner_2").addEventListener("click", Winner_2);
+document.getElementById("Winner_1").addEventListener("click", Winner_1);
+document.getElementById("Winner_0").addEventListener("click", Winner_0);
