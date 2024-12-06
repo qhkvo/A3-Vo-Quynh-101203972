@@ -5,22 +5,47 @@ body {
   padding: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   height: 100vh;
 }
 
 .container {
-  text-align: center;
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 600px;
-  height: 600px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1200px;
 }
 
-h1 {
-  color: #333333;
+.left-column {
+  width: 57%;
+  padding: 20px;
+  text-align: center;
+}
+
+.right-column {
+  width: 36%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 231px;
+}
+
+.top-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.button-row {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.button-row .btn {
+  margin: 0 10px;
 }
 
 .display-screen {
@@ -38,9 +63,6 @@ h1 {
 
 .button-container {
   margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .btn {
@@ -60,10 +82,13 @@ h1 {
 
 .input-container {
   margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 input {
-  width: 200px;
+  width: 230px;
   padding: 5px;
   font-size: 14px;
   text-align: center;

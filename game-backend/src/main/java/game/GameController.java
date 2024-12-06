@@ -26,7 +26,6 @@ public class GameController {
         return game.start(); // This returns the game's start message
     }
 
-
     @GetMapping("/checkForWinnersOrProceed")
     public ResponseEntity<String> checkForWinnersOrProceed(@RequestParam(required = false) String input) {
         try {
@@ -37,26 +36,33 @@ public class GameController {
         }
     }
 
+    @GetMapping("/A1_scenario")
+    public String triggerA1Scenario() {
+        try {
+            return game.triggerA1Scenario();
+        } catch (Exception e) {
+            return "Error triggering A1 Scenario: " + e.getMessage();
+        }
+    }
+
+    @GetMapping("/Winner_2")
+    public String trigger2WinnerScenario() {
+        try {
+            return game.trigger2WinnersScenario();
+        } catch (Exception e) {
+            return "Error triggering A1 Scenario: " + e.getMessage();
+        }
+    }
+
     // Handle the initial resolve logic or prompt the next player
     @GetMapping("/resolveEvent")
     public ResponseEntity<String> resolveEvent() {
         try {
-            String response = game.resolveEvent(null); // Pass null for the initial step
+            String response = game.resolveEvent(null);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error resolving event: " + e.getMessage());
         }
-    }
-
-    @GetMapping("/getAllPlayerHand")
-    public List<String> getAllPlayerHand() {
-
-            List<String> response = new ArrayList<>();
-            for(Player p : game.getPlayers()){
-                response.add(String.join(" ",p.displayHand()));
-            }
-            return response;
-
     }
 
     // Process the player's input

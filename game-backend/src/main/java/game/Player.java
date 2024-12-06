@@ -86,23 +86,19 @@ public class Player {
         messages.clear();
         List<Card> discardedCards = new ArrayList<>();
 
+        System.out.println("input--> " + input);
+
+        while (stages.size() < currentStage) stages.add(new ArrayList<>());
+
         if (currentStage == 0) {  // Initialize
             currentStage = 1;
             previousStageValue = 0;
             globalSelectedCardPositions.clear();
             questSetupComplete = false;
         }
-
-//        if (currentStage > stageCount) {
-//            hand.removeAll(discardedCards);
-//            messages.add("Quest setup complete.");
-//            questSetupComplete = true;
-//            previousStageValue = 0;
-//            return String.join("\n", messages);
-//        }
-
-        while (stages.size() < currentStage) stages.add(new ArrayList<>());
         List<Card> stageCards = stages.get(currentStage - 1);
+        System.out.println("CURRENT STAGE" + currentStage);
+        System.out.println("STAGE CARDS" + stageCards);
 
         if (input == null) {
             messages.add("---> SETTING UP STAGE " + currentStage + " OF " + stageCount + " <---");
@@ -121,6 +117,7 @@ public class Player {
                 int currentStageValue = calculateStageValue(stageCards);
                 if (currentStageValue <= previousStageValue) {
                     messages.add("Insufficient value for this stage. Stage value must be higher than the previous stage.");
+                    return String.join("\n", messages);
                 } else {
                     previousStageValue = currentStageValue;
                     messages.add("Stage " + (currentStage) + " successfully set with the following cards:");
@@ -143,16 +140,21 @@ public class Player {
                         sortHand();
                         messages.addAll(displayHand());
                         messages.add("Enter the position of a card to include in this stage, or type 'Quit' to finish the stage:");
+                        return String.join("\n", messages);
                     }
                 }
             }
         } else {
             try {
                 int cardPosition = Integer.parseInt(input) - 1;
+                System.out.println("INPUT" + cardPosition);
 
                 if (cardPosition < 0 || cardPosition >= hand.size()) {
                     messages.add("Invalid input. Please enter a valid card position.");
                 } else if ( selectedCardPositions.contains(cardPosition) || globalSelectedCardPositions.contains(cardPosition)) {
+                    System.out.println("selectedCardPositions " + selectedCardPositions);
+                    System.out.println("globalSelectedCardPositions " + globalSelectedCardPositions);
+
                     messages.add("This card has already been selected for this stage or another stage. Please choose a different card.");
                 } else {
                     Card selectedCard = hand.get(cardPosition);

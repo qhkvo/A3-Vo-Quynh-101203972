@@ -27,20 +27,21 @@ p1.addCardToHand(
         p2.addCardToHand(new Card("L20", 20));
         p2.addCardToHand(new Card("E30",30));
 
-        p3.addCardToHand(new Card("F5", 5));
-        p3.addCardToHand(new Card("F5", 5));
-        p3.addCardToHand(new Card("F5", 5));
-        p3.addCardToHand(new Card("F5", 5));
-        p3.addCardToHand(new Card("D5",  5));
-        p3.addCardToHand(new Card("D5", 5));
-        p3.addCardToHand(new Card("D5", 5));
+        p3.addCardToHand(new Card("F25", 25));
+        p3.addCardToHand(new Card("F30", 30));
+        p3.addCardToHand(new Card("S10", 10));
+        p3.addCardToHand(new Card("S10", 10));
+        p3.addCardToHand(new Card("S10", 10));
         p3.addCardToHand(new Card("H10", 10));
         p3.addCardToHand(new Card("H10", 10));
-        p3.addCardToHand(new Card("H10", 10));
-        p3.addCardToHand(new Card("H10", 10));
-        p3.addCardToHand(new Card("H10", 10));
+        p3.addCardToHand(new Card("B15", 15));
+        p3.addCardToHand(new Card("B15", 15));
+        p3.addCardToHand(new Card("L20",20));
+        p3.addCardToHand(new Card("L20", 20));
+        p3.addCardToHand(new Card("E30",30));
 
-        p2.addCardToHand(new Card("F50", 50));
+        p2.addCardToHand(new Card("F25",25));
+        p2.addCardToHand(new Card("F30", 30));
         p2.addCardToHand(new Card("F70", 70));
         p2.addCardToHand(new Card("S10", 10));
         p2.addCardToHand(new Card("S10", 10));
@@ -51,8 +52,7 @@ p1.addCardToHand(
         p2.addCardToHand(new Card("B15", 15));
         p2.addCardToHand(new Card("L20", 20));
         p2.addCardToHand(new Card("L20",20));
-        p2.addCardToHand(new Card("E30",30));
-
+)
 String input = "yes\n" + // P1 sponsors the quest
                 "1\nquit\n" + // Stage 1
                 "3\nquit\n" + // Stage 2

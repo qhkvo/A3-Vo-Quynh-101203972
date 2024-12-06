@@ -31,8 +31,6 @@ async function startGame() {
 //        const resultText = await result.text();
 //        console.log("Start Game Response:", result);
         updateDisplayScreen(result);
-
-//        await resolveEvent();
     } catch (error) {
         console.error("Error in startGame:", error);
         updateDisplayScreen("Error starting the game. Please try again.");
@@ -102,4 +100,54 @@ document.getElementById("input").addEventListener("keypress", function (event) {
         resolveEventInput();
     }
 });
+
+
+async function A1_scenario() {
+    try {
+        const result = await apiRequest('/A1_scenario');
+        console.log("A1 Scenario Response:", result);
+        updateDisplayScreen(result);
+    } catch (error) {
+        console.error("Error in A1 Scenario:", error);
+        updateDisplayScreen("Error triggering A1 Scenario. Please try again.");
+    }
+}
+
+async function Winner_2() {
+    try {
+        const result = await apiRequest('/Winner_2');
+        console.log("Winner_2 Scenario Response:", result);
+        updateDisplayScreen(result);
+    } catch (error) {
+        console.error("Error triggering Winner_2 Scenario:", error);
+        updateDisplayScreen("Error triggering Winner_2 Scenario. Please try again.");
+    }
+}
+
+async function Winner_1() {
+    try {
+        const result = await apiRequest('/Winner_1');
+        console.log("Winner_1 Scenario Response:", result);
+        updateDisplayScreen(result);
+    } catch (error) {
+        console.error("Error triggering Winner_1 Scenario:", error);
+        updateDisplayScreen("Error triggering Winner_1 Scenario. Please try again.");
+    }
+}
+
+async function Winner_0() {
+    try {
+        const result = await apiRequest('/Winner_0');
+        console.log("Winner_0 Scenario Response:", result);
+        updateDisplayScreen(result);
+    } catch (error) {
+        console.error("Error triggering Winner_0 Scenario:", error);
+        updateDisplayScreen("Error triggering Winner_0 Scenario. Please try again.");
+    }
+}
+
 document.getElementById("start-game-btn").addEventListener("click", startGame);
+document.getElementById("A1_scenario").addEventListener("click", A1_scenario);
+document.getElementById("2Winner").addEventListener("click", Winner_2);
+document.getElementById("1Winner").addEventListener("click", Winner_1);
+document.getElementById("0Winner").addEventListener("click", Winner_0);

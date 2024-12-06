@@ -8,22 +8,39 @@
 </head>
 <body>
 <div class="container">
-    <h1>Quest Game</h1>
+    <!-- Left Column for Display and Start Button -->
+    <div class="left-column">
+        <h1>Quest Game</h1>
 
-    <!-- Display Screen -->
-    <div id="display-screen" class="display-screen">
-        Welcome to the Card Game!
+        <!-- Display Screen -->
+        <div id="display-screen" class="display-screen">
+            Welcome to the Card Game!
+        </div>
+
+        <!-- Start Game Button -->
+        <div class="button-container">
+            <button id="start-game-btn" class="btn">Start Game</button>
+        </div>
     </div>
 
-    <!-- Buttons -->
-    <div class="button-container">
-        <button id="start-game-btn" class="btn">Start Game</button>
-    </div>
+    <!-- Right Column for Other Buttons and Input Box -->
+    <div class="right-column">
+        <div class="top-buttons">
+            <div class="button-row">
+                <button id="A1_scenario" class="btn">A1_scenario</button>
+                <button id="2Winner" class="btn">2Winner</button>
+            </div>
+            <div class="button-row">
+                <button id="1Winner" class="btn">1Winner</button>
+                <button id="0Winner" class="btn">0Winner</button>
+            </div>
+        </div>
 
-    <!-- Input Field -->
-    <div id="input-container" class="input-container">
-        <label for="input">Input here</label>
-        <input id="input" placeholder="Type your response and press Enter">
+        <!-- Input Field -->
+        <div id="input-container" class="input-container">
+            <label for="input">Input here</label>
+            <input id="input" placeholder="Type your response and press Enter">
+        </div>
     </div>
 </div>
 
