@@ -3,7 +3,6 @@ const chrome = require('selenium-webdriver/chrome');
 const { Key } = require('selenium-webdriver');
 
 async function A1_scenario() {
-    // Setup ChromeDriver (you can adjust the path to your chromedriver if needed)
     let driver = await new Builder().forBrowser('chrome').build();
 
 
@@ -34,12 +33,21 @@ async function A1_scenario() {
         let inputField = await driver.findElement(By.id("input"));
         let inputParts = A1ScenarioInputs.split("\n");
 
-        for (const input of inputParts) {
+//        for (const input of inputParts) {
+//            console.log("input: ", input);
+//            await inputField.sendKeys(input, Key.ENTER);
+//            await driver.sleep(1000);
+//        }
+        for (let i = 0; i < inputParts.length; i++) {
+            let input = inputParts[i];
             console.log("input: ", input);
             await inputField.sendKeys(input, Key.ENTER);
             await driver.sleep(1000);
+            if (i === inputParts.length - 2) {
+                console.log("Reached last input, stopping the test.");
+                break; // Exit the loop after the last input
+            }
         }
-
 
         let displayScreen = await driver.findElement(By.id('display-screen'));
         let displayText = await displayScreen.getText();

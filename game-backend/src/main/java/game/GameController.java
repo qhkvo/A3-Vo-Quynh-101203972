@@ -50,7 +50,16 @@ public class GameController {
         try {
             return game.trigger2WinnersScenario();
         } catch (Exception e) {
-            return "Error triggering A1 Scenario: " + e.getMessage();
+            return "Error triggering 2 Winners Scenario: " + e.getMessage();
+        }
+    }
+
+    @GetMapping("/Winner_0")
+    public String trigger0WinnerScenario() {
+        try {
+            return game.trigger0WinnersScenario();
+        } catch (Exception e) {
+            return "Error triggering 0 Winners Scenario: " + e.getMessage();
         }
     }
 

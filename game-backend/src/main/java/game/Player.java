@@ -83,30 +83,35 @@ public class Player {
     }
 
     public String setUpQuest(String input, List<List<Card>> stages, int stageCount, int gameStage) {
-        messages.clear();
+//        messages.clear();
         List<Card> discardedCards = new ArrayList<>();
 
-        System.out.println("input--> " + input);
-
-        while (stages.size() < currentStage) stages.add(new ArrayList<>());
-
+        // DON'T CHNAGE THE OTHER OF THIS AND INPUT == NULL OR ELSE IT'LL HAVE INPUT ERROR
         if (currentStage == 0) {  // Initialize
             currentStage = 1;
             previousStageValue = 0;
             globalSelectedCardPositions.clear();
             questSetupComplete = false;
         }
+
+        while (stages.size() < currentStage) stages.add(new ArrayList<>());
+
+
         List<Card> stageCards = stages.get(currentStage - 1);
         System.out.println("CURRENT STAGE" + currentStage);
         System.out.println("STAGE CARDS" + stageCards);
 
         if (input == null) {
-            messages.add("---> SETTING UP STAGE " + currentStage + " OF " + stageCount + " <---");
+            messages.add("---> SETTING UP STAGE " + currentStage + " OF " + stageCount + " <---jnj");
             sortHand();
             messages.addAll(displayHand());
             messages.add("Enter the position of a card to include in this stage, or type 'Quit' to finish the stage:");
             return String.join("\n", messages);
         }
+
+        System.out.println("input--> " + input);
+
+
 
         if (input.equalsIgnoreCase("Quit")) {
             if (stageCards.isEmpty()) {
@@ -136,19 +141,17 @@ public class Player {
                         return String.join("\n", messages);
                         //return setUpQuest(null, stages, stageCount, gameStage); // Pass null to trigger final check
                     } else {
-                        messages.add("---> SETTING UP STAGE " + currentStage + " OF " + stageCount + " <---");
+                        messages.add("---> SETTING UP STAGE " + currentStage + " OF " + stageCount + " <---uiui");
                         sortHand();
                         messages.addAll(displayHand());
                         messages.add("Enter the position of a card to include in this stage, or type 'Quit' to finish the stage:");
-                        return String.join("\n", messages);
+                        //return String.join("\n", messages);
                     }
                 }
             }
         } else {
             try {
                 int cardPosition = Integer.parseInt(input) - 1;
-                System.out.println("INPUT" + cardPosition);
-
                 if (cardPosition < 0 || cardPosition >= hand.size()) {
                     messages.add("Invalid input. Please enter a valid card position.");
                 } else if ( selectedCardPositions.contains(cardPosition) || globalSelectedCardPositions.contains(cardPosition)) {

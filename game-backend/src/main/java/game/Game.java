@@ -81,14 +81,6 @@ public class Game {
     public String start() {
         setUpDecks();
         distributeCards();
-//        while (winners.isEmpty()) {
-//            playTurn();
-//            checkForWinnersOrProceed();
-//        }
-//        if (isFirstTurn) {
-//            messages.add("Welcome to the game! This is the first turn.");
-//            isFirstTurn = false;
-//        }
         messages.add("Game started successfully! Players have been dealt their cards.");
         playTurn();
         resolveEvent(null);
@@ -271,6 +263,93 @@ public class Game {
         return String.join("\n", messages);
     }
 
+    public String trigger0WinnersScenario() {
+        setUpDecks();
+        List<Card> drawnACards = Arrays.asList(
+                new Card("F5",5), new Card("F15", 15),
+                new Card("F10", 10), new Card("F5",5),
+                new Card("F10", 10), new Card("F15", 15),
+                new Card("D5", 5), new Card("D5", 5),
+                new Card("D5", 5), new Card("D5", 5),
+                new Card("S10", 10), new Card("S10", 10),
+                new Card("S10", 10), new Card("H10", 10),
+                new Card("H10", 10), new Card("H10", 10),
+                new Card("H10", 10)
+
+        );
+
+        List<Card> drawnECards = List.of(new Card("Q2", 2));
+
+        getAdventureDeck().addOnTop(drawnACards);
+        getEventDeck().addOnTop(drawnECards);
+
+        List<Player> players = getPlayers();
+        p1 = players.get(0);
+        p2 = players.get(1);
+        p3 = players.get(2);
+        p4 = players.get(3);
+
+        p1.removeHand();
+        p2.removeHand();
+        p3.removeHand();
+        p4.removeHand();
+
+        p1.addCardToHand( new Card("F50", 50));
+        p1.addCardToHand( new Card("F70", 70));
+        p1.addCardToHand( new Card("D5", 5));
+        p1.addCardToHand( new Card("D5", 5));
+        p1.addCardToHand(new Card("S10", 10));
+        p1.addCardToHand(new Card("S10", 10));
+        p1.addCardToHand( new Card("H10", 10));
+        p1.addCardToHand( new Card("H10", 10));
+        p1.addCardToHand( new Card("B15", 15));
+        p1.addCardToHand( new Card("B15", 15));
+        p1.addCardToHand( new Card("L20", 20));
+        p1.addCardToHand( new Card("L20", 20));
+
+        p2.addCardToHand(new Card("F5", 5));
+        p2.addCardToHand(new Card("F5", 5));
+        p2.addCardToHand(new Card("F10", 10));
+        p2.addCardToHand(new Card("F15", 15));
+        p2.addCardToHand(new Card("F15", 15));
+        p2.addCardToHand(new Card("F20", 20));
+        p2.addCardToHand(new Card("F20", 20));
+        p2.addCardToHand(new Card("F25", 25));
+        p2.addCardToHand(new Card("F30", 30));
+        p2.addCardToHand(new Card("F30", 30));
+        p2.addCardToHand(new Card("F40", 40));
+        p2.addCardToHand(new Card("E30",30));
+
+        p3.addCardToHand(new Card("F5", 5));
+        p3.addCardToHand(new Card("F5", 5));
+        p3.addCardToHand(new Card("F10", 10));
+        p3.addCardToHand(new Card("F15", 15));
+        p3.addCardToHand(new Card("F15", 15));
+        p3.addCardToHand(new Card("F20", 20));
+        p3.addCardToHand(new Card("F20", 20));
+        p3.addCardToHand(new Card("F25", 25));
+        p3.addCardToHand(new Card("F25", 25));
+        p3.addCardToHand(new Card("F30", 30));
+        p3.addCardToHand(new Card("F40", 40));
+        p3.addCardToHand(new Card("L20",20));
+
+        p4.addCardToHand(new Card("F5", 5));
+        p4.addCardToHand(new Card("F5", 5));
+        p4.addCardToHand(new Card("F10", 10));
+        p4.addCardToHand(new Card("F15", 15));
+        p4.addCardToHand(new Card("F15", 15));
+        p4.addCardToHand(new Card("F20", 20));
+        p4.addCardToHand(new Card("F20", 20));
+        p4.addCardToHand(new Card("F25", 25));
+        p4.addCardToHand(new Card("F25", 25));
+        p4.addCardToHand(new Card("F30", 30));
+        p4.addCardToHand(new Card("F50", 50));
+        p4.addCardToHand(new Card("E30",30));
+
+        play();
+        return String.join("\n", messages);
+    }
+
 //
     public void play(){
         playTurn();
@@ -386,7 +465,7 @@ public class Game {
 
                 currentGameState = GameState.IDLE;
                 endCurrentPlayerTurn();
-//                play();
+                play();
                 return String.join("\n", messages);
             }
             discardEPile.add(eventCard1);
@@ -404,7 +483,6 @@ public class Game {
             Player sponsor = players.get(sponsorIndex);
             System.out.println("TOTAL STAGES CARD____ " + input);
             String result = sponsor.setUpQuest(input, totalStagesCards, stageCount, currentStage);
-//            sponsor.setUpQuest(input, totalStagesCards, stageCount, currentStage);
             if (sponsor.hasFinishedQuestSetup()) {
                 currentStage = 0;
                 currentGameState = GameState.STARTING_QUEST;
@@ -605,9 +683,7 @@ public class Game {
         messages.clear();
         Player currentPlayer = players.get(playerToAnswerIndex);
         if (currentGameState == GameState.PROMPTING_SPONSORSHIP) {
-            System.out.println("input");
             if (input.equalsIgnoreCase("yes")) {
-                System.out.println("yes");
                 messages.add("Player " + (playerToAnswerIndex + 1) + " has decided to sponsor the quest.");
 
                 if (currentPlayer.canSponsorQuest(stageCount)) {
@@ -616,15 +692,12 @@ public class Game {
                     sponsorIndex = playerToAnswerIndex;  // Set the sponsor index
 
                     currentGameState = GameState.SETTING_UP_QUEST;
-//                    resolveEvent(null);
-//                    return String.join("\n", messages);
-//                    return resolveEvent(null);
 
-                    System.out.println("sponsorIndex " + sponsorIndex);
 
-                    return resolveEvent(input);
-//                    return String.join("\n", messages) + "\n";
+                    return resolveEvent(null);
                 } else {
+                    System.out.println("playerToAnswer " + (playerToAnswerIndex + 1));
+                    System.out.println("currentPlayer " + players.get(playerToAnswerIndex));
                     messages.add("Player " + (playerToAnswerIndex + 1) + " does not have enough cards to sponsor the quest.");
                 }
                 return String.join("\n", messages);
@@ -860,6 +933,7 @@ public class Game {
                 if (withdrawnParticipants.size() == 4) {
                     messages.add("All participants have been eliminated.");
                     successfulParticipants.clear();
+                    return endQuest(totalStagesCards, adventureDeck);
                 } else {
                     eligibleParticipants.clear();
                     eligibleParticipants.addAll(successfulParticipants);
@@ -908,25 +982,9 @@ public class Game {
                 if (!successfulParticipants.contains(playerBuildingAttack)) {
                     successfulParticipants.add(playerBuildingAttack);
                 }
-
-
-
             }
         }
-//        System.out.println("successfull: " + successfulParticipants);
 
-//        // Update eligible participants for the next round
-//        if (withdrawnParticipants.size() == 4) {
-//            messages.add("All participants have been eliminated.");
-//            successfulParticipants.clear();
-//        } else {
-//            eligibleParticipants.clear();
-//            eligibleParticipants.addAll(successfulParticipants);
-//            messages.add("Participants remaining for the next stage:");
-//            for (Player player : eligibleParticipants) {
-//                messages.add("Player " + (players.indexOf(player) + 1));
-//            }
-//        }
         System.out.println("Participants remaining for the next stage:: " + eligibleParticipants);
     }
 
